@@ -1,0 +1,16 @@
+D:\download\university\university\bin\Debug\netcoreapp2.2\appsettings.Development.json
+D:\download\university\university\bin\Debug\netcoreapp2.2\appsettings.json
+D:\download\university\university\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
+D:\download\university\university\bin\Debug\netcoreapp2.2\university.deps.json
+D:\download\university\university\bin\Debug\netcoreapp2.2\university.runtimeconfig.json
+D:\download\university\university\bin\Debug\netcoreapp2.2\university.runtimeconfig.dev.json
+D:\download\university\university\bin\Debug\netcoreapp2.2\university.dll
+D:\download\university\university\bin\Debug\netcoreapp2.2\university.pdb
+D:\download\university\university\obj\Debug\netcoreapp2.2\university.RazorAssemblyInfo.cache
+D:\download\university\university\obj\Debug\netcoreapp2.2\university.RazorAssemblyInfo.cs
+D:\download\university\university\obj\Debug\netcoreapp2.2\university.AssemblyInfoInputs.cache
+D:\download\university\university\obj\Debug\netcoreapp2.2\university.AssemblyInfo.cs
+D:\download\university\university\obj\Debug\netcoreapp2.2\university.RazorTargetAssemblyInfo.cache
+D:\download\university\university\obj\Debug\netcoreapp2.2\university.dll
+D:\download\university\university\obj\Debug\netcoreapp2.2\university.pdb
+D:\download\university\university\obj\Debug\netcoreapp2.2\university.csprojAssemblyReference.cache
