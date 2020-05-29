@@ -14,22 +14,19 @@ namespace university.Services.Repository
         {
             _universityDbContext = universityDbContext;
         }
-        public bool CreateBook(Books books, int teacher, List<int> student)
+        public bool CreateBook(Books books, List<int> teacherId)
         {
-            var teachers = _universityDbContext.Teachers.Where(t => t.Id == teacher).FirstOrDefault();
-            var students = _universityDbContext.Students.Where(s => student.Contains(s.Id)).ToList();
-
-                foreach (var studen in students)
+            var teachers = _universityDbContext.Teachers.Where(t => teacherId.Contains(t.Id)).ToList();
+            foreach (var teacher in teachers)
+            {
+                var bookTeacher = new BooksTeachers
                 {
-                    var bookTeacherStudents = new BookTeacherStudent()
-                    {
-                        teachers = teachers,
-                        books = books,
-                        student = studen
-                    };
-                    _universityDbContext.Add(bookTeacherStudents);
+                    Books = books,
+                    Teachers = teacher
+                };
+                _universityDbContext.Add(bookTeacher);
             }
-             _universityDbContext.Add(books);
+            _universityDbContext.Add(books);
             return Save();
         }
 
@@ -59,16 +56,9 @@ namespace university.Services.Repository
         {
             return _universityDbContext.Books.OrderBy(b => b.Name).ToList();
         }
-
-        public ICollection<Students> GetStudentsByBook(int bookId)
-        {
-            var students = _universityDbContext.BookTeacherStudents.Where(b => b.bookId == bookId).Select(s => s.student.Id).FirstOrDefault();
-            return _universityDbContext.Students.Where(s => s.Id == students).ToList();
-        }
-
         public ICollection<Teachers> GetTeachersByBook(int bookId)
         {
-            var taechers = _universityDbContext.BookTeacherStudents.Where(b => b.bookId == bookId).Select(t => t.teachers.Id).FirstOrDefault();
+            var taechers = _universityDbContext.BooksTeachers.Where(b => b.BookId == bookId).Select(t => t.Teachers.Id).FirstOrDefault();
             return _universityDbContext.Teachers.Where(t => t.Id == taechers).ToList();
         }
 
@@ -77,29 +67,22 @@ namespace university.Services.Repository
             var save = _universityDbContext.SaveChanges();
             return save >= 0 ? true : false;
         }
-        public bool UpdateBook(Books books, List<int> teacher, List<int> student)
+        public bool UpdateBook(Books books, List<int> teacherId)
         {
-            var teachers = _universityDbContext.Teachers.Where(t => teacher.Contains(t.Id)).ToList();
-            var students = _universityDbContext.Students.Where(s => student.Contains(s.Id)).ToList();
+            var teachers = _universityDbContext.Teachers.Where(t => teacherId.Contains(t.Id)).ToList();
+            var deleteBookTeacher = _universityDbContext.BooksTeachers.Where(t => t.BookId == books.Id);
 
-            foreach (var teache in teachers)
+            _universityDbContext.RemoveRange(deleteBookTeacher);
+
+            foreach (var teacher in teachers)
             {
-                var bookTeacherStudent = new BookTeacherStudent()
+                var bookTeacher = new BooksTeachers()
                 {
-                    books = books,
-                    teachers = teache
+                    Books = books,
+                    Teachers = teacher
                 };
-                _universityDbContext.Update(bookTeacherStudent);
+                _universityDbContext.Add(bookTeacher);
             }
-
-                foreach (var studen in students)
-                {
-                    var bookTeacherStudents = new BookTeacherStudent()
-                    {
-                        student = studen
-                    };
-                    _universityDbContext.Update(bookTeacherStudents);
-                }
             _universityDbContext.Update(books);
             return Save();
         }

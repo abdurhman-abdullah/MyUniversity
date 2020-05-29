@@ -39,10 +39,10 @@ namespace university.Services.Repository
         {
            return _universityDbContext.Teachers.Any(t => t.Id == teacherId);
         }
-        public ICollection<Students> GetStudents(int teacherId)
+        public ICollection<Division> GetDivisionsByTeacher(int teacherId)
         {
-            var student = _universityDbContext.BookTeacherStudents.Where(t => t.teacherId == teacherId).Select(s => s.student.Id).FirstOrDefault();
-            return _universityDbContext.Students.Where(s => s.Id == student).ToList();
+            return _universityDbContext.Teachers.Where(t => t.Id == teacherId).
+                                                        Select(d => d.Divisions.ToList()).FirstOrDefault();
         }
 
         public Teachers GetTeacher(int teacherId)
@@ -57,7 +57,7 @@ namespace university.Services.Repository
 
         public ICollection<Teachers> GetTeachersByBook(int bookId)
         {
-            var teacher = _universityDbContext.BookTeacherStudents.Where(b => b.bookId == bookId).Select(t => t.teachers.Id).FirstOrDefault();
+            var teacher = _universityDbContext.BooksTeachers.Where(b => b.BookId == bookId).Select(t => t.Teachers.Id).FirstOrDefault();
             return _universityDbContext.Teachers.Where(t => t.Id == teacher).ToList();
         }
         public bool Save()

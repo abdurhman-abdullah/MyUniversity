@@ -140,10 +140,10 @@ namespace university.Controllers
 
             updateToStudents.supervisor = _supervisorRepository.GetSupervisor(updateToStudents.supervisor.Id);
 
-            //if (!_specialtiesRepository.Exists(updateToStudents.specialtie.Id))
-            //    return NotFound();
+            if (!_specialtiesRepository.Exists(updateToStudents.specialtie.Id))
+                return NotFound();
 
-            //updateToStudents.specialtie = _specialtiesRepository.GetSpecialty(updateToStudents.specialtie.Id);
+            updateToStudents.specialtie = _specialtiesRepository.GetSpecialty(updateToStudents.specialtie.Id);
 
             if (!ModelState.IsValid)
                 return BadRequest();

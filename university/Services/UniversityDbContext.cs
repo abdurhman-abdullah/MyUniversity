@@ -22,25 +22,35 @@ namespace university.Services
         public virtual DbSet<Supervisor> Supervisors { get; set; }
         public virtual DbSet<Students> Students { get; set; }
         public virtual DbSet<Books> Books { get; set; }
-        public virtual DbSet<BookTeacherStudent> BookTeacherStudents { get; set; }
+        public virtual DbSet<Division> Divisions { get; set; }
+        public virtual DbSet<DivisionStudent> DivisionStudents { get; set; }
+        public virtual DbSet<BooksTeachers> BooksTeachers { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BookTeacherStudent>()
-                .HasKey(bt => new { bt.teacherId, bt.bookId, bt.StudentId});
-            modelBuilder.Entity<BookTeacherStudent>()
-                .HasOne(t => t.teachers)
-                .WithMany(tb => tb.BookTeacherStudents)
-                .HasForeignKey(t => t.teacherId);
-            modelBuilder.Entity<BookTeacherStudent>()
-                .HasOne(b => b.books)
-                .WithMany(tb => tb.BookTeacherStudents)
-                .HasForeignKey(b => b.bookId);
-            modelBuilder.Entity<BookTeacherStudent>()
-                .HasOne(s => s.student)
-                .WithMany(bt => bt.BookTeacherStudents)
+            modelBuilder.Entity<DivisionStudent>()
+                .HasKey(ds => new { ds.DivisionId , ds.StudentId});
+            modelBuilder.Entity<DivisionStudent>()
+                .HasOne(d => d.Division)
+                .WithMany(ds => ds.DivisionStudents)
+                .HasForeignKey(d => d.DivisionId);
+            modelBuilder.Entity<DivisionStudent>()
+                .HasOne(s => s.Students)
+                .WithMany(ds => ds.DivisionStudents)
                 .HasForeignKey(s => s.StudentId);
+
+            modelBuilder.Entity<BooksTeachers>()
+                .HasKey(bt => new { bt.BookId, bt.TeacherId });
+            modelBuilder.Entity<BooksTeachers>()
+                .HasOne(b => b.Books)
+                .WithMany(bt => bt.BooksTeachers)
+                .HasForeignKey(b => b.BookId);
+            modelBuilder.Entity<BooksTeachers>()
+                .HasOne(t => t.Teachers)
+                .WithMany(bt => bt.BooksTeachers)
+                .HasForeignKey(t => t.TeacherId);
         } 
     }
 }

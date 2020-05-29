@@ -11,27 +11,28 @@ namespace university.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+       public int Id { get; set; }
 
         [Required]
         [MinLength(3 , ErrorMessage = "Enter 3 Letters")]
-        public string FirstName { get; set; }
+       public string FirstName { get; set; }
 
         [Required]
         [MinLength(3 , ErrorMessage = "Enter 3 Letters")]
-        public string LastName { get; set; }
+       public string LastName { get; set; }
 
         [Required]
         [MinLength(3 , ErrorMessage = "Enter 3 Letters")]
-        public string NameFamily { get; set; }
+       public string NameFamily { get; set; }
 
-        public DateTime? DatePublished { get; set; }
+       public DateTime? DatePublished { get; set; }
 
-        public virtual DepartmentDirectors departmentDirector { get; set; }
+       public virtual DepartmentDirectors departmentDirector { get; set; }
 
-        public virtual Specialties Specialties { get; set; }
+       public virtual Specialties Specialties { get; set; }
 
-        public virtual ICollection<BookTeacherStudent> BookTeacherStudents { get; set; }
+       public virtual ICollection<Division> Divisions { get; set; }
+       public virtual ICollection<BooksTeachers> BooksTeachers { get; set; }
 
     }
 }

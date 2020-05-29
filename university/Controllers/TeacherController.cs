@@ -75,31 +75,28 @@ namespace university.Controllers
             return Ok(teacherDto);
         }
 
-        [HttpGet("{teacherId}/student")]
-        public IActionResult GetStudents(int teacherId)
+        [HttpGet("{teacherId}/divisions")]
+        public IActionResult GetDivisions(int teacherId)
         {
             if (!_teachersRepository.Exists(teacherId))
                 return NotFound();
 
-            var students = _teachersRepository.GetStudents(teacherId);
+            var divisions = _teachersRepository.GetDivisionsByTeacher(teacherId);
 
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var studentDto = new List<StudentDto>();
+            var divisionsDto = new List<DivisionsDto>();
 
-            foreach (var student in students)
+            foreach (var division in divisions)
             {
-                studentDto.Add(new StudentDto
+                divisionsDto.Add(new DivisionsDto
                 {
-                    Id = student.Id,
-                    FirstName = student.FirstName,
-                    LastName = student.LastName,
-                    NameFamily = student.NameFamily,
-                    DatePublished = student.DatePublished
+                    Id = division.Id,
+                    DivisionNo = division.DivisionNo
                 });
             }
-            return Ok(studentDto);
+            return Ok(divisionsDto);
         }
 
         [HttpGet("teachers/{bookId}")]

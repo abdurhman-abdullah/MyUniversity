@@ -12,7 +12,7 @@ namespace university.Services.IRepository
         bool DublicateTeacher(string FirstName , string LastName, string NameFamily, int teacherId);
         ICollection<Teachers> GetTeachers();
         Teachers GetTeacher(int teacherId);
-        ICollection<Students> GetStudents(int teacherId);
+        ICollection<Division> GetDivisionsByTeacher(int teacherId);
         ICollection<Teachers> GetTeachersByBook(int bookId);
         Specialties specialtiesByTeacher(int teacherId);
         bool CreateTeacher(Teachers teachers);

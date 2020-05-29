@@ -24,6 +24,7 @@ namespace university.Model
 
         public virtual Specialties specialtie { get; set; }
 
-        public virtual ICollection<BookTeacherStudent> BookTeacherStudents { get; set; }
+        public virtual ICollection<Division> Divisions { get; set; }
+        public virtual ICollection<BooksTeachers> BooksTeachers { get; set; }
     }
 }

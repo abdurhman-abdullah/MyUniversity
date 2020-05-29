@@ -19,23 +19,6 @@ namespace university.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("university.Model.BookTeacherStudent", b =>
-                {
-                    b.Property<int>("teacherId");
-
-                    b.Property<int>("bookId");
-
-                    b.Property<int>("StudentId");
-
-                    b.HasKey("teacherId", "bookId", "StudentId");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("bookId");
-
-                    b.ToTable("BookTeacherStudents");
-                });
-
             modelBuilder.Entity("university.Model.Books", b =>
                 {
                     b.Property<int>("Id")
@@ -58,6 +41,25 @@ namespace university.Migrations
                     b.ToTable("Books");
                 });
 
+            modelBuilder.Entity("university.Model.BooksTeachers", b =>
+                {
+                    b.Property<int>("BookId");
+
+                    b.Property<int>("TeacherId");
+
+                    b.Property<int?>("BooksTeachersBookId");
+
+                    b.Property<int?>("BooksTeachersTeacherId");
+
+                    b.HasKey("BookId", "TeacherId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.HasIndex("BooksTeachersBookId", "BooksTeachersTeacherId");
+
+                    b.ToTable("BooksTeachers");
+                });
+
             modelBuilder.Entity("university.Model.DepartmentDirectors", b =>
                 {
                     b.Property<int>("Id")
@@ -78,6 +80,50 @@ namespace university.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DepartmentDirectors");
+                });
+
+            modelBuilder.Entity("university.Model.Division", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BooksId");
+
+                    b.Property<long>("DivisionNo");
+
+                    b.Property<int?>("SpecialtiesId");
+
+                    b.Property<int?>("TeachersId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BooksId");
+
+                    b.HasIndex("SpecialtiesId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.ToTable("Divisions");
+                });
+
+            modelBuilder.Entity("university.Model.DivisionStudent", b =>
+                {
+                    b.Property<int>("DivisionId");
+
+                    b.Property<int>("StudentId");
+
+                    b.Property<int?>("DivisionStudentDivisionId");
+
+                    b.Property<int?>("DivisionStudentStudentId");
+
+                    b.HasKey("DivisionId", "StudentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("DivisionStudentDivisionId", "DivisionStudentStudentId");
+
+                    b.ToTable("DivisionStudents");
                 });
 
             modelBuilder.Entity("university.Model.Specialties", b =>
@@ -206,29 +252,60 @@ namespace university.Migrations
                     b.ToTable("TheSections");
                 });
 
-            modelBuilder.Entity("university.Model.BookTeacherStudent", b =>
-                {
-                    b.HasOne("university.Model.Students", "student")
-                        .WithMany("BookTeacherStudents")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("university.Model.Books", "books")
-                        .WithMany("BookTeacherStudents")
-                        .HasForeignKey("bookId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("university.Model.Teachers", "teachers")
-                        .WithMany("BookTeacherStudents")
-                        .HasForeignKey("teacherId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("university.Model.Books", b =>
                 {
                     b.HasOne("university.Model.Specialties", "specialtie")
                         .WithMany("Books")
                         .HasForeignKey("specialtieId");
+                });
+
+            modelBuilder.Entity("university.Model.BooksTeachers", b =>
+                {
+                    b.HasOne("university.Model.Books", "Books")
+                        .WithMany("BooksTeachers")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("university.Model.Teachers", "Teachers")
+                        .WithMany("BooksTeachers")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("university.Model.BooksTeachers")
+                        .WithMany("BookTeachers")
+                        .HasForeignKey("BooksTeachersBookId", "BooksTeachersTeacherId");
+                });
+
+            modelBuilder.Entity("university.Model.Division", b =>
+                {
+                    b.HasOne("university.Model.Books", "Books")
+                        .WithMany("Divisions")
+                        .HasForeignKey("BooksId");
+
+                    b.HasOne("university.Model.Specialties", "Specialties")
+                        .WithMany("Divisions")
+                        .HasForeignKey("SpecialtiesId");
+
+                    b.HasOne("university.Model.Teachers", "Teachers")
+                        .WithMany("Divisions")
+                        .HasForeignKey("TeachersId");
+                });
+
+            modelBuilder.Entity("university.Model.DivisionStudent", b =>
+                {
+                    b.HasOne("university.Model.Division", "Division")
+                        .WithMany("DivisionStudents")
+                        .HasForeignKey("DivisionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("university.Model.Students", "Students")
+                        .WithMany("DivisionStudents")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("university.Model.DivisionStudent")
+                        .WithMany("DivisionStudents")
+                        .HasForeignKey("DivisionStudentDivisionId", "DivisionStudentStudentId");
                 });
 
             modelBuilder.Entity("university.Model.Specialties", b =>

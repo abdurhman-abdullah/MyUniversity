@@ -46,6 +46,7 @@ namespace university
             services.AddScoped<ISpecialtiesRepository, SpecialtiesRepository>();
             services.AddScoped<ITeachersRepository, TeachersRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IDivisionRepository, DivisionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

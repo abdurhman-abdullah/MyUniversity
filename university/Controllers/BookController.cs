@@ -14,18 +14,18 @@ namespace university.Controllers
     public class BookController : Controller
     {
         private IBookRepository _bookRepository;
-        private IStudentRepository _studentRepository;
         private ITeachersRepository _teachersRepository;
         private ISpecialtiesRepository _specialtiesRepository;
+        private IDivisionRepository _divisionRepository;
         public BookController(IBookRepository bookRepository,
-                              IStudentRepository studentRepository,
                               ITeachersRepository teachersRepository,
-                              ISpecialtiesRepository specialtiesRepository)
+                              ISpecialtiesRepository specialtiesRepository,
+                              IDivisionRepository divisionRepository)
         {
             _bookRepository = bookRepository;
-            _studentRepository = studentRepository;
             _teachersRepository = teachersRepository;
             _specialtiesRepository = specialtiesRepository;
+            _divisionRepository = divisionRepository;
         }
 
         [HttpGet]
@@ -72,32 +72,6 @@ namespace university.Controllers
             return Ok(bookDto);
         }
 
-        [HttpGet("{bookId}/student")]
-        public IActionResult GetBooksByStudent(int bookId)
-        {
-            if (!_bookRepository.Exists(bookId))
-                return NotFound();
-
-            var students = _bookRepository.GetStudentsByBook(bookId);
-
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            var studentDto = new List<StudentDto>();
-
-            foreach (var student in students)
-            {
-                studentDto.Add(new StudentDto
-                {
-                    Id = student.Id,
-                    FirstName = student.FirstName,
-                    LastName = student.LastName,
-                    DatePublished = student.DatePublished
-                });
-            }
-            return Ok(studentDto);
-        }
-
         [HttpGet("{bookId}/teacher")]
         public IActionResult GetBooksByTeacher(int bookId)
         {
@@ -125,9 +99,9 @@ namespace university.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateBook([FromBody]Books createTobooks, [FromQuery] int teachers, [FromQuery]List<int> students)
+        public IActionResult CreateBook([FromBody]Books createTobooks, [FromQuery] List<int> teachersId)
         {
-           var statusCode = validation(createTobooks, teachers, students);
+           var statusCode = validation(createTobooks, teachersId);
 
             if (!ModelState.IsValid)
                 return StatusCode(statusCode.StatusCode);
@@ -140,7 +114,7 @@ namespace university.Controllers
 
             createTobooks.specialtie = _specialtiesRepository.GetSpecialty(createTobooks.specialtie.Id);
 
-            if (!_bookRepository.CreateBook(createTobooks , teachers, students))
+            if (!_bookRepository.CreateBook(createTobooks , teachersId))
             {
                 ModelState.AddModelError("", $"Something went wrong saving the Book {createTobooks.Number}");
                 return StatusCode(500, ModelState);
@@ -148,11 +122,67 @@ namespace university.Controllers
             return CreatedAtRoute("GetBook", new { bookId = createTobooks.Id }, createTobooks);
         }
 
-        public StatusCodeResult validation(Books books, int teachers, List<int> students)
+        [HttpPut("{bookId}")]
+        public IActionResult UpdateBook(Books updateTobooks, int bookId ,List<int> teachersId)
         {
-            if (books == null || teachers <= 0 || students.Count <= 0)
+            var statusCode = validation(updateTobooks, teachersId);
+
+            if (!ModelState.IsValid)
+                return StatusCode(statusCode.StatusCode);
+
+            if (updateTobooks.Id != bookId)
+                return BadRequest();
+
+            if (!_bookRepository.Exists(bookId))
+                return NotFound();
+
+            if (updateTobooks.specialtie == null)
+                return BadRequest("Please entry Specialtie");
+
+            if (!_specialtiesRepository.Exists(updateTobooks.specialtie.Id))
+                return NotFound();
+
+            updateTobooks.specialtie = _specialtiesRepository.GetSpecialty(updateTobooks.specialtie.Id);
+
+
+            if (!_bookRepository.UpdateBook(updateTobooks , teachersId))
             {
-                ModelState.AddModelError("", "Missing book , teacher or student");
+                ModelState.AddModelError("", $"Something went wrong updating {updateTobooks.Name}");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{bookId}")]
+        public IActionResult DeleteBook(int bookId)
+        {
+            if (!_bookRepository.Exists(bookId))
+                return NotFound();
+
+            var deleteToBook = _bookRepository.GetBook(bookId);
+            var deleteToDivision = _divisionRepository.GetDivisionsByBook(bookId);
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            if (!_divisionRepository.DeleteDivisions(deleteToDivision.ToList()))
+            {
+                ModelState.AddModelError("", $"Something went wrong deleting Division");
+                return StatusCode(500, ModelState);
+            }
+            if (!_bookRepository.DeleteBook(deleteToBook))
+            {
+                ModelState.AddModelError("", $"Something went wrong deleting {deleteToBook.Name}");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+        public StatusCodeResult validation(Books books,List<int> teachersId)
+        {
+            if (books == null || teachersId.Count <= 0)
+            {
+                ModelState.AddModelError("", "Missing book or teacher");
                 return BadRequest();
             }
             
@@ -162,17 +192,11 @@ namespace university.Controllers
                 return BadRequest();
             }
 
-            if (!_teachersRepository.Exists(teachers))
+            foreach (var teacher in teachersId)
             {
-                ModelState.AddModelError("", "Teacher Not Found");
-                return StatusCode(422);
-            }
-
-            foreach (var student in students)
-            {
-                if (!_studentRepository.Exists(student))
+                if (!_teachersRepository.Exists(teacher))
                 {
-                    ModelState.AddModelError("", "Student Not Found");
+                    ModelState.AddModelError("", "Teacher Not Found");
                     return StatusCode(422);
                 }
             }

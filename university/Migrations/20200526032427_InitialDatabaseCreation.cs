@@ -172,34 +172,101 @@ namespace university.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookTeacherStudents",
+                name: "BooksTeachers",
                 columns: table => new
                 {
-                    teacherId = table.Column<int>(nullable: false),
-                    bookId = table.Column<int>(nullable: false),
-                    StudentId = table.Column<int>(nullable: false)
+                    BookId = table.Column<int>(nullable: false),
+                    TeacherId = table.Column<int>(nullable: false),
+                    BooksTeachersBookId = table.Column<int>(nullable: true),
+                    BooksTeachersTeacherId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookTeacherStudents", x => new { x.teacherId, x.bookId, x.StudentId });
+                    table.PrimaryKey("PK_BooksTeachers", x => new { x.BookId, x.TeacherId });
                     table.ForeignKey(
-                        name: "FK_BookTeacherStudents_Students_StudentId",
+                        name: "FK_BooksTeachers_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BooksTeachers_Teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BooksTeachers_BooksTeachers_BooksTeachersBookId_BooksTeachersTeacherId",
+                        columns: x => new { x.BooksTeachersBookId, x.BooksTeachersTeacherId },
+                        principalTable: "BooksTeachers",
+                        principalColumns: new[] { "BookId", "TeacherId" },
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Divisions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DivisionNo = table.Column<long>(nullable: false),
+                    SpecialtiesId = table.Column<int>(nullable: true),
+                    BooksId = table.Column<int>(nullable: true),
+                    TeachersId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Divisions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Divisions_Books_BooksId",
+                        column: x => x.BooksId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Divisions_Specialties_SpecialtiesId",
+                        column: x => x.SpecialtiesId,
+                        principalTable: "Specialties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Divisions_Teachers_TeachersId",
+                        column: x => x.TeachersId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DivisionStudents",
+                columns: table => new
+                {
+                    DivisionId = table.Column<int>(nullable: false),
+                    StudentId = table.Column<int>(nullable: false),
+                    DivisionStudentDivisionId = table.Column<int>(nullable: true),
+                    DivisionStudentStudentId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DivisionStudents", x => new { x.DivisionId, x.StudentId });
+                    table.ForeignKey(
+                        name: "FK_DivisionStudents_Divisions_DivisionId",
+                        column: x => x.DivisionId,
+                        principalTable: "Divisions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DivisionStudents_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookTeacherStudents_Books_bookId",
-                        column: x => x.bookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookTeacherStudents_Teachers_teacherId",
-                        column: x => x.teacherId,
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_DivisionStudents_DivisionStudents_DivisionStudentDivisionId_DivisionStudentStudentId",
+                        columns: x => new { x.DivisionStudentDivisionId, x.DivisionStudentStudentId },
+                        principalTable: "DivisionStudents",
+                        principalColumns: new[] { "DivisionId", "StudentId" },
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -208,14 +275,39 @@ namespace university.Migrations
                 column: "specialtieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookTeacherStudents_StudentId",
-                table: "BookTeacherStudents",
+                name: "IX_BooksTeachers_TeacherId",
+                table: "BooksTeachers",
+                column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BooksTeachers_BooksTeachersBookId_BooksTeachersTeacherId",
+                table: "BooksTeachers",
+                columns: new[] { "BooksTeachersBookId", "BooksTeachersTeacherId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Divisions_BooksId",
+                table: "Divisions",
+                column: "BooksId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Divisions_SpecialtiesId",
+                table: "Divisions",
+                column: "SpecialtiesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Divisions_TeachersId",
+                table: "Divisions",
+                column: "TeachersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DivisionStudents_StudentId",
+                table: "DivisionStudents",
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookTeacherStudents_bookId",
-                table: "BookTeacherStudents",
-                column: "bookId");
+                name: "IX_DivisionStudents_DivisionStudentDivisionId_DivisionStudentStudentId",
+                table: "DivisionStudents",
+                columns: new[] { "DivisionStudentDivisionId", "DivisionStudentStudentId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Specialties_TheSectionsId",
@@ -256,7 +348,13 @@ namespace university.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BookTeacherStudents");
+                name: "BooksTeachers");
+
+            migrationBuilder.DropTable(
+                name: "DivisionStudents");
+
+            migrationBuilder.DropTable(
+                name: "Divisions");
 
             migrationBuilder.DropTable(
                 name: "Students");

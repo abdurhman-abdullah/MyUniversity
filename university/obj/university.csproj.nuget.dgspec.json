@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\download\\university\\university\\university.csproj": {}
+    "D:\\university\\MyUniversity\\university\\university.csproj": {}
   },
   "projects": {
-    "D:\\download\\university\\university\\university.csproj": {
+    "D:\\university\\MyUniversity\\university\\university.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\download\\university\\university\\university.csproj",
+        "projectUniqueName": "D:\\university\\MyUniversity\\university\\university.csproj",
         "projectName": "university",
-        "projectPath": "D:\\download\\university\\university\\university.csproj",
+        "projectPath": "D:\\university\\MyUniversity\\university\\university.csproj",
         "packagesPath": "C:\\Users\\A\\.nuget\\packages\\",
-        "outputPath": "D:\\download\\university\\university\\obj\\",
+        "outputPath": "D:\\university\\MyUniversity\\university\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\A\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -12,10 +12,9 @@ namespace university.Services.IRepository
         bool DepulicateBook(int bookNumber, int Id);
         ICollection<Books> GetBooks();
         Books GetBook(int bookId);
-        ICollection<Students> GetStudentsByBook(int bookId);
         ICollection<Teachers> GetTeachersByBook(int bookId);
-        bool CreateBook(Books books , int teacher, List<int> student);
-        bool UpdateBook(Books books , List<int> teacher, List<int> student);
+        bool CreateBook(Books books , List<int> teacherId);
+        bool UpdateBook(Books books , List<int> teacherId);
         bool DeleteBook(Books books);
         bool Save();
     }

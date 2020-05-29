@@ -31,7 +31,7 @@ namespace university.Model
 
         public virtual Supervisor supervisor { get; set; }
 
-        public virtual ICollection<BookTeacherStudent> BookTeacherStudents { get; set; }
+        public virtual ICollection<DivisionStudent> DivisionStudents { get; set; }
 
     }
 }

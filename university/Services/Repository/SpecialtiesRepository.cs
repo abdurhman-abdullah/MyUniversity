@@ -43,6 +43,11 @@ namespace university.Services.Repository
             return _universityDbContext.Books.Where(s => s.specialtie.Id == specialtiesId).ToList();
         }
 
+        public ICollection<Division> GetDivisions(int specialtiesId)
+        {
+            return _universityDbContext.Divisions.Where(d => d.Specialties.Id == specialtiesId).ToList();
+        }
+
         public ICollection<Specialties> GetSpecialties()
         {
             return _universityDbContext.Specialties.OrderBy(s => s.Name).ToList();

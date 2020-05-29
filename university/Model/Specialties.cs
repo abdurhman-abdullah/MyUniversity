@@ -21,10 +21,12 @@ namespace university.Model
 
         public virtual TheSections TheSections { get; set; }
 
-        public virtual ICollection<Books> Books { get; set; }
+        //public virtual ICollection<Books> Books { get; set; }
 
-        public virtual ICollection<Teachers> Teachers { get; set; }
+        //public virtual ICollection<Teachers> Teachers { get; set; }
 
-        public virtual ICollection<Students> Students { get; set; }
+        //public virtual ICollection<Students> Students { get; set; }
+
+        //public virtual ICollection<Division> Divisions { get; set; } 
     }
 }

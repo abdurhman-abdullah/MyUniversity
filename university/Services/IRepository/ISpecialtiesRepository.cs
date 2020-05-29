@@ -15,6 +15,7 @@ namespace university.Services.IRepository
         ICollection<Books> GetBooks(int specialtiesId);
         ICollection<Teachers> GetTeachers(int specialtiesId);
         ICollection<Students> GetStudents(int specialtiesId);
+        ICollection<Division> GetDivisions(int specialtiesId);
         bool CreateSpecialties(Specialties specialties);
         bool UpdateSpecialties(Specialties specialties);
         bool DeleteSpecialties(Specialties specialties);
